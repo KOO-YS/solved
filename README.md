@@ -1,14 +1,14 @@
-# Algorithm Training
+# 🛴 Algorithm Training
 
 
 
-### algorithm training site
+### algorithm training site 🎯
 
-- ##### Baekjoon
+- ##### [Baekjoon](https://www.acmicpc.net/)
 
-- ##### Programmers
+- ##### [Programmers](https://programmers.co.kr/learn/challenges)
 
 
 
-#### [[code upload template]](https://github.com/KOO-YS/solved/blob/master/_____Template____domain_problem.md)
+#### ✍ [[code upload template]](https://github.com/KOO-YS/solved/blob/master/_____Template____domain_problem.md)
 
