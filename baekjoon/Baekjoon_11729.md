@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 
 public class Main {
 
-    public static int[] tower;
     public static StringBuilder route = new StringBuilder();
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -25,7 +24,6 @@ public class Main {
         // 원판의 개수
         int N = Integer.parseInt(br.readLine());
 
-        tower = new int[N];
         int answer = hanoi(N, 1, 2, 3);
 
         System.out.println(answer);
