@@ -18,6 +18,12 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
+    public static int N;
+    public static int K;
+
+    public static int[] isVisited = new int[100001];
+    public static int[] parents = new int[100001];
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -26,54 +32,30 @@ public class Main {
         N = Integer.parseInt(token.nextToken());
         K = Integer.parseInt(token.nextToken());
 
-        // 경로가 커질지 작아질지 알 수 없기 때문에 전체 범위로 초기화
-        isVisited = new int[100001];            
-        parents = new int[100001];
-
-        String answer = findFastRoute();
-        System.out.println(answer);
-
+        findFastRoute();
+        printRoute();
     }
 
-    public static int N;
-    public static int K;
-
-    public static int[] isVisited;
-    public static int[] parents;
-
-    public static String findFastRoute(){
-        StringBuffer result = new StringBuffer();
+    public static void findFastRoute(){
 
         Queue<Integer> route = new LinkedList<>();
         route.add(N);
-        isVisited[N] = 0;       // 시작점
+        isVisited[N] = 1;       // 시작점
 
         while(!route.isEmpty()){
             int X = route.poll();
 
-            if(isVisited[K] != 0){
-                int parent = parents[K];
+            if(X == K) return;
 
-                while(parent != -1){
-                    result.insert(0, parent+" ");
-                    parent = parents[parent];
-                }
-                result.insert(0, N+" ");        // 시작값
-                result.append(K);                         // 도착값
-
-                // 전체 루트
-                result.insert(0, isVisited[K]+"\n");
-                return result.toString();
-            }
             /*
                 case 1. (X-1)
                 case 2. (X+1)
                 case 3. 2X
             */
             if(isBoundary(X-1) && isVisited[X - 1] == 0){           // Case 1
-               route.add(X-1);
-               isVisited[X-1] = isVisited[X]+1;
-               parents[X-1] = X;
+                route.add(X-1);
+                isVisited[X-1] = isVisited[X]+1;
+                parents[X-1] = X;
             }
 
             if(isBoundary(X+1) && isVisited[X + 1] == 0){           // Case 2
@@ -86,15 +68,73 @@ public class Main {
                 isVisited[2*X] = isVisited[X]+1;
                 parents[2*X] = X;
             }
-
         }
-        return result.toString();
     }
-
     public static boolean isBoundary(int num){
         if( num <0 || num >100000 ) return false;
         return true;
     }
-}
 
+    public static void printRoute(){
+        StringBuilder route = new StringBuilder();
+
+        route.append(isVisited[K]-1+"\n");
+
+        Stack<Integer> reverse = new Stack<>();
+
+        reverse.push(K);
+        int parent = K;
+        while (parent != N){
+            reverse.push(parents[parent]);
+            parent = parents[parent];
+        }
+
+        while(!reverse.isEmpty()){
+            route.append(reverse.pop()+" ");
+        }
+        System.out.println(route.toString());
+    }
+
+}
 ```
+
+
+
+
+
+##### 시간 초과 해결 
+
+---
+
+`오답`
+
+```java
+reverse.push(K);
+int parent = parents[K];
+
+while (parent != N){
+	reverse.push(parent);
+	parent = parents[parent];
+
+}
+reverse.push(N);
+```
+
+-> K 와 N을 비교하지 않는다
+
+ N와 K가 같을 경우를 비교하지 못한다
+
+
+
+`정답`
+
+```java
+reverse.push(K);
+int parent = K;
+while (parent != N){
+    reverse.push(parents[parent]);
+    parent = parents[parent];
+}
+```
+
+-> K N이 같을 경우도 비교가 가능하다 
