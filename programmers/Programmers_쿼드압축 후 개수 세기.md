@@ -12,35 +12,30 @@
 
 ```java
 class Solution {
-    public static int result[];
-    public static int[] solution(int[][] arr) {
-        result = new int[2];
+    public static int[] answer;
+    public int[] solution(int[][] arr) {
+        answer = new int[2];
+
         quadTree(arr, 0, 0, arr.length);
 
-        return result;
+        return answer;
     }
-
-    public static void quadTree(int[][] arr, int row, int col, int N) {
-        if(fillWith(arr, row, col, N)) {
-            result[arr[row][col]]++;        // 0 or 1의 개수 추가
-        }else {
-            int size = N/2;
-
-            //해당 영역을 다시 4분할 하여 탐색
-            quadTree(arr, row, col, size);
-            quadTree(arr, row, col + size, size);
-            quadTree(arr, row + size, col, size);
-            quadTree(arr, row + size, col + size, size);
+    public static void quadTree(int[][] arr, int col, int row, int len){
+        if(check(arr, col, row, len)){
+            answer[arr[col][row]]++;
+        } else{
+            quadTree(arr, col, row, len/2);
+            quadTree(arr, col, row+(len/2), len/2);
+            quadTree(arr, col+(len/2), row, len/2);
+            quadTree(arr, col+(len/2), row+(len/2), len/2);
         }
     }
 
-    //해당 영역이 전부 1이거나 0인 경우 해당 배열 원소값 +1
-    public static boolean fillWith(int[][] arr, int row, int col, int size) {
-        int t = arr[row][col];
-
-        for(int i=row; i < row+size; i++) {
-            for(int j=col; j < col+size; j++) {
-                if(t != arr[i][j]) return false;
+    public static boolean check(int[][] arr, int col, int row, int len){
+        int value = arr[col][row];
+        for(int i=col; i<col+len; i++){
+            for(int j=row; j<row+len; j++){
+               if(arr[i][j] != value) return false;
             }
         }
         return true;
