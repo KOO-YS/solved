@@ -8,8 +8,6 @@
 
 
 
-
-
 > ### Solution 
 
 ```java
@@ -129,7 +127,8 @@ public class Main {
 
 
 
-시간 초과가 떠서 
-bomb.length()  대신 변수 선언
+#### 시간 초과가 떠서 변경한 점  
 
-stack 반환에 향상된 for문 사용
+1. bomb.length()로 함수를 매번 호출하는 대신 변수 선언해 사용
+
+2. stack 반환에 향상된 for문 사용
