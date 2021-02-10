@@ -6,56 +6,93 @@
 
 
 
-> ### Solution
+> ### Solution (1차 시도)
 
 ```java
-public String solution(String new_id) {
-    String answer = "";
-    StringBuilder result = new StringBuilder();
 
-    int validLength = 0;
-    char[] arr = new_id.toCharArray();
-    if(arr[0] != '.'){
-        validLength++;
-        result.append(arr[0]);
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Queue;
+
+class Solution {
+    public String solution(String new_id) {
+        StringBuilder result = new StringBuilder();
+
+        Deque<Character> temp = new LinkedList<>();
+        Queue<Character> test = new LinkedList<>();
+
+        for(char c : new_id.toCharArray()){
+            // 유효한 문자만 저장
+            if((c = isValidChar(c)) != ' ') {
+                test.add(c);
+            }
+        }
+        if(test.size() == 0) return "aaa";
+
+        char last = test.poll();
+
+        while(!test.isEmpty()){
+            if(last == '.' && test.peek() == '.'){
+                test.poll();
+                continue;
+            }
+            temp.add(last);
+            if(test.size() == 1 && test.peek() != '.'){
+                temp.add(test.poll());
+            } else if(!test.isEmpty()) {
+                last = test.poll();
+            }
+
+        }
+
+        temp = qwerty(temp);
+
+        while(temp.size() > 15){
+            temp.pollLast();
+        }
+        while(temp.size() < 3 && temp.size() > 0){
+            temp.addLast(temp.peekLast());
+        }
+
+        temp = qwerty(temp);
+
+        if(temp.isEmpty()) return "aaa";
+        while(!temp.isEmpty()){
+            result.append(temp.poll());
+        }
+
+        return result.toString();
     }
-    for(int i=1; i<arr.length; i++){
-        if(isValidChar(arr[i])){
 
-        }else{
-            if(changeCapitalLetter(arr[i]) != arr[i]){
-                arr[i] = changeCapitalLetter(arr[i]);
-                i--;
+    private Deque<Character> qwerty(Deque<Character> temp) {
+        boolean check1;
+        boolean check2;
+        while(!temp.isEmpty()){
+            check1 = false;
+            check2 = false;
+
+            if(temp.peekFirst() == '.'){
+                temp.pollFirst();
+            } else check1 = true;
+            if(!temp.isEmpty() && temp.peekLast() == '.'){
+                temp.pollLast();
+            } else check2 = true;
+
+            if(check1 && check2) {
+                break;
             }
         }
 
+        return temp;
     }
 
-    if(new_id.charAt(new_id.length()-1) != '.'){
-        validLength++;
-        result.append(new_id.charAt(new_id.length()-1));
+    private char isValidChar(char ch){
+        if((ch == '-') || (ch == '_') || (ch == '.')) return ch;
+        else if(ch >= 'a' && ch <= 'z') return ch;
+        else if(ch >= '0' && ch <= '9') return ch;
+        else if(ch >= 'A' && ch <= 'Z') return (char)(ch+32);
+        return ' ';     // 나머지
     }
-
-    // end
-    if(validLength == 0) return "aaa";
-
-    // 길이 확인
-    if(validLength <= 2){
-
-    }
-    return answer;
-}
-public boolean isValidChar(char ch){
-    if((ch == '-') || (ch == '_') || (ch == '.')) return true;
-    else if(ch >= 'a' && ch <= 'z') return true;
-    return false;
-}
-
-public char changeCapitalLetter(char ch){
-    if(ch >= 'A' && ch <= 'Z'){
-        return (char)(ch+32);
-    }
-    return ch;
 }
 ```
 
