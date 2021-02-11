@@ -6,10 +6,54 @@
 
 
 
-> ### Solution (1차 시도)
+
+
+> ### Solution (다른 사람 풀이 참고)
 
 ```java
+class Solution {
+    public String solution(String new_id){
+        String answer = "";
 
+        // 대문자 변환
+        String temp = new_id.toLowerCase();
+
+        // 사용 불가능한 문자 제거
+        /*
+         * 정규 표현식을 ^로 시작 :
+         * 부정 문자셋(negated character set) 또는 보충 문자셋(complemented character set)
+         * 괄호 내부에 등장하지 않는 어떤 문자와도 대응
+         */
+        temp = temp.replaceAll("[^-_.a-z0-9]", "");     // 포함 가능한 문자 : -_.a-z0-9
+
+        //  .이 연속 등장하는 경우 제거
+        temp = temp.replaceAll("[.]{2,}",".");
+        
+        temp = temp.replaceAll("^[.]|[.]$","");
+
+        if(temp.equals("")) temp+="a";      // 공백일 때
+        if(temp.length() >=16){
+            temp = temp.substring(0,15);
+            temp=temp.replaceAll("^[.]|[.]$","");
+        }
+        if(temp.length()<=2)
+            while(temp.length()<3)
+                temp+=temp.charAt(temp.length()-1);
+
+        answer=temp;
+
+        return answer;
+    }
+}
+```
+
+
+
+<br>
+
+> ### Solution (성공했지만 정리 안된 코드)
+
+```java
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -18,75 +62,79 @@ class Solution {
     public String solution(String new_id) {
         StringBuilder result = new StringBuilder();
 
-        Deque<Character> temp = new LinkedList<>();
-        Queue<Character> test = new LinkedList<>();
+        Queue<Character> initial = new LinkedList<>();
+        Deque<Character> apply = new LinkedList<>();
 
         for(char c : new_id.toCharArray()){
             // 유효한 문자만 저장
             if((c = isValidChar(c)) != ' ') {
-                test.add(c);
+                initial.add(c);
             }
         }
-        if(test.size() == 0) return "aaa";
+        if(initial.size() == 0) return "aaa";
 
-        char last = test.poll();
+        if(initial.size() == 1 && initial.peek() != '.'){
+            return ""+initial.peek()+initial.peek()+initial.peek();
+        }
+        char last = initial.poll();
 
-        while(!test.isEmpty()){
-            if(last == '.' && test.peek() == '.'){
-                test.poll();
+
+
+        while(!initial.isEmpty()){
+            if(last == '.' && initial.peek() == '.'){
+                initial.poll();
                 continue;
             }
-            temp.add(last);
-            if(test.size() == 1 && test.peek() != '.'){
-                temp.add(test.poll());
-            } else if(!test.isEmpty()) {
-                last = test.poll();
+            apply.add(last);
+            if(initial.size() == 1 && initial.peek() != '.'){
+                apply.add(initial.poll());
+            } else if(!initial.isEmpty()) {
+                last = initial.poll();
             }
 
         }
 
-        temp = qwerty(temp);
+        apply = qwerty(apply);
 
-        while(temp.size() > 15){
-            temp.pollLast();
+        while(apply.size() > 15){
+            apply.pollLast();
         }
-        while(temp.size() < 3 && temp.size() > 0){
-            temp.addLast(temp.peekLast());
+        while(apply.size() < 3 && apply.size() > 0){
+            apply.addLast(apply.peekLast());
         }
 
-        temp = qwerty(temp);
+        apply = qwerty(apply);
 
-        if(temp.isEmpty()) return "aaa";
-        while(!temp.isEmpty()){
-            result.append(temp.poll());
+        if(apply.isEmpty()) return "aaa";
+        while(!apply.isEmpty()){
+            result.append(apply.poll());
         }
 
         return result.toString();
     }
 
-    private Deque<Character> qwerty(Deque<Character> temp) {
-        boolean check1;
-        boolean check2;
-        while(!temp.isEmpty()){
-            check1 = false;
-            check2 = false;
+    public Deque<Character> qwerty(Deque<Character> apply) {
+        boolean checkFirst;
+        boolean checkLast;
+        while(!apply.isEmpty()){
+            checkFirst = false;
+            checkLast = false;
 
-            if(temp.peekFirst() == '.'){
-                temp.pollFirst();
-            } else check1 = true;
-            if(!temp.isEmpty() && temp.peekLast() == '.'){
-                temp.pollLast();
-            } else check2 = true;
+            if(apply.peekFirst() == '.'){
+                apply.pollFirst();
+            } else checkFirst = true;
+            if(!apply.isEmpty() && apply.peekLast() == '.'){
+                apply.pollLast();
+            } else checkLast = true;
 
-            if(check1 && check2) {
+            if(checkFirst && checkLast) {
                 break;
             }
         }
-
-        return temp;
+        return apply;
     }
 
-    private char isValidChar(char ch){
+    public char isValidChar(char ch){
         if((ch == '-') || (ch == '_') || (ch == '.')) return ch;
         else if(ch >= 'a' && ch <= 'z') return ch;
         else if(ch >= '0' && ch <= '9') return ch;
