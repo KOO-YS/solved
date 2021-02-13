@@ -28,12 +28,13 @@ class Solution {
 
         //  .이 연속 등장하는 경우 제거
         temp = temp.replaceAll("[.]{2,}",".");
-        
+        // .가 앞뒤 끝에 오는 경우 제거
         temp = temp.replaceAll("^[.]|[.]$","");
 
         if(temp.equals("")) temp+="a";      // 공백일 때
         if(temp.length() >=16){
             temp = temp.substring(0,15);
+            // substring 후 .가 앞뒤 끝에 오는 경우 제거
             temp=temp.replaceAll("^[.]|[.]$","");
         }
         if(temp.length()<=2)
@@ -46,6 +47,22 @@ class Solution {
     }
 }
 ```
+
+<br>
+
+#### 표현식 Tip
+
+> ##### [^0-9] : 숫자를 제외한 나머지 문자만 허용. 숫자를 허용하지 않음 
+>
+> <br>
+>
+> ##### ^[0-9] : 문자열의 시작이 숫자만 허용
+>
+> ##### 	\* [0-9]$ :  문자열의 종료에 숫자만 허용
+>
+> <br>
+>
+> *차이점에 주의 !*
 
 
 
