@@ -12,46 +12,35 @@
 > ### Solution
 
 ```java
-import org.junit.Assert;
-import org.junit.Test;
-
 import java.util.*;
 
-import static org.hamcrest.core.Is.is;
-// https://programmers.co.kr/learn/courses/30/lessons/12936
-public class Solution {
-    @Test
-    public void test() {
-        Solution s = new Solution();
-        Assert.assertThat(s.solution(5, 4), is(new int[]{1, 2, 4, 5, 3}));
-        Assert.assertThat(s.solution(3, 5), is(new int[]{3, 1, 2}));
-
-    }
-
-    public int[] solution(int n, long k) {
-        int[] answer = new int[n];
+class Solution {
+    public long[] factorial;
+    public int[] solution(int total, long k) {
+        int[] answer = new int[total];
         int index = 0;
 
+        int n = total;
         List<Integer> nums = new ArrayList<>();
 
-        long[] factorial = new long[n+1];
+        factorial = new long[n+1];
         factorial[0] = 1;
-        for(int i=1; i<=n; i++){
+        for(int i=1; i<=total; i++){
             factorial[i] = factorial[i-1]*i;
             nums.add(i);
         }
 
-        long dung = factorial[n-1];
-        answer[index] = nums.remove((int) (k/dung));
-        System.out.println(answer[index]+"dun?"+dung);
-        index++;
-        n--;
-        k = k%dung;
+        while(index != total){
+            long part = factorial[n-1];
 
-        dung = factorial[n-1];
-        answer[index] = nums.remove((int) (k/dung));
-        System.out.println(answer[index]+"dun?"+dung);
-        index++;
+            if(k == 0) answer[index] = nums.remove(nums.size()-1);
+            else if(k%part == 0) answer[index] = nums.remove((int) (k/part)-1);
+            else answer[index] = nums.remove((int) (k/part));
+
+            index++;
+            n--;
+            k = k%part;
+        }
 
         return answer;
     }
