@@ -18,9 +18,10 @@ class Solution {
         int answer = 0;
 
         int time = 0;     // 작업 시작 시간
+
         int index = 0;
-        
-        int count = 0;
+        int length = jobs.length;
+
         Queue<Disk> queue = new PriorityQueue<>();
 
         Arrays.sort(jobs, new Comparator<int[]>() {
@@ -30,26 +31,26 @@ class Solution {
             }
         });
 
-        while(count != jobs.length){
+        while(index < length || queue.size() > 0){
             // 시작 가능한 작업들 우선 순위 큐에 담기
-            while(index != jobs.length && time >= jobs[index][0]){
+            while(index != length && time >= jobs[index][0]){
                 queue.add(new Disk(jobs[index][0], jobs[index][1]));
                 index++;
             }
+            
+            // 시작 가능한 프로세스 중 가장 적은 소요시간의 작업 수행
             if(queue.size() > 0) {
                 Disk now = queue.poll();
                 int process = time + now.process - now.request;
                 answer += process;
                 time = time + now.process;
             } else {
-                time = jobs[index][0] + jobs[index][1];
-                answer += jobs[index][1];
-                index++;
+                // 시작점이 될 시간을 다시 세팅
+                time = jobs[index][0];
             }
-            count++;
         }
 
-        return answer/jobs.length;
+        return answer/length;      // 평균
     }
     class Disk implements Comparable<Disk>{
         int request;
