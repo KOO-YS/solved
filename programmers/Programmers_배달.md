@@ -1,10 +1,10 @@
-# [Programmers] 행렬 테두리 회전하기
+# [Programmers] 배달
 
 
 
 > ### Problem
 >
-> https://programmers.co.kr/learn/courses/30/lessons/77485
+> https://programmers.co.kr/learn/courses/30/lessons/
 
 <br>
 
@@ -14,91 +14,72 @@
 import java.util.*;
 
 class Solution {
-    public int[] solution(int rows, int columns, int[][] queries) {
-        int[] answer = new int[queries.length];
-        int index = 0;  // 회전 인덱스
+    public int solution(int N, int[][] road, int K) {
+        int answer = 0;
 
-        arr = new int[rows][columns];
+        List<Town>[] towns = new ArrayList[N+1];    // 연관도시
+        int[] minimum = new int[N+1];       // 각 도시에 도착하는 최소 시간
 
-        // initialize
-        int count = 1;
-        for(int i=0; i<rows; i++){
-            for(int j=0; j<columns; j++){
-                arr[i][j] = count++;
+        // init
+        Arrays.fill(minimum, 500001);     // 최대값이 500000
+        minimum[1] = 0;     // 자기 자신
+
+        for(int i=0; i<=N; i++){
+            towns[i] = new ArrayList<>();
+        }
+        // 경로 세팅
+        for(int i=0; i< road.length; i++){
+            int a = road[i][0];
+            int b = road[i][1];
+            int h = road[i][2];
+
+            towns[a].add(new Town(b, h));
+            towns[b].add(new Town(a, h));
+        }
+
+        Queue<Town> queue = new PriorityQueue<>();
+        queue.add(new Town(1, 0));
+        while(!queue.isEmpty()){
+            Town now = queue.poll();
+
+            int num = now.num;
+            int hour = now.hour;
+
+            if(minimum[num] >= hour) {       // 최소값 X
+
+                // 연관 도시
+                for(int i=0; i<towns[num].size(); i++){
+                    Town next = towns[num].get(i);
+                    int nextNum = next.num;
+                    int nextHour = hour+ next.hour;
+
+                    if(minimum[nextNum] > nextHour){
+                        minimum[nextNum] = nextHour;
+                        queue.add(new Town(nextNum, nextHour));
+                    }
+                }
             }
         }
 
-        for(int i=0; i<queries.length; i++){
-            circle(queries[i][0]-1, queries[i][1]-1, queries[i][2]-1, queries[i][3]-1);
-            answer[index] = getMin(queries[i][0]-1, queries[i][1]-1, queries[i][2]-1, queries[i][3]-1);
-            index++;
+        for(int i=1; i<=N; i++){
+            if(minimum[i] <= K) answer++;
         }
-
         return answer;
     }
-    public int[][] arr;
-    /*
-    * 테두리 회전
-    * */
-    public void circle(int startX, int startY, int endX, int endY){
-        int next = 0;
-        int before = 0;
 
-        // 왼 -> 오
-        next = arr[startX][endY];
-        for(int i = endY; i>startY; i--){
-            arr[startX][i] = arr[startX][i- 1];
+    class Town implements Comparable<Town>{
+        int num;
+        int hour;
+
+        public Town(int num, int hour) {
+            this.num = num;
+            this.hour = hour;
         }
 
-        // 위 -> 아래
-        before = next;
-        next = arr[endX][endY];
-        for(int i = endX; i>startX+1; i--){
-            arr[i][endY] = arr[i-1][endY];
+        @Override
+        public int compareTo(Town o) {
+            return hour - o.hour;
         }
-        arr[startX+1][endY] = before;
-
-
-        // 오른 -> 왼
-        before = next;
-        next = arr[endX][startY];
-        for(int i = startY; i<endY-1; i++){
-            arr[endX][i] = arr[endX][i+1];
-        }
-        arr[endX][endY-1] = before;
-
-        // 아래 -> 위
-        for(int i = startX; i<endX-1; i++){
-            arr[i][startY] = arr[i+1][startY];
-        }
-        arr[endX-1][startY] = next;
-
-    }
-    /*
-    * 테두리에서 최소값 가져오기
-    * */
-    public int getMin(int startX, int startY, int endX, int endY){
-        int min = Integer.MAX_VALUE;
-
-        // 가로
-        for(int i = startY; i<=endY; i++){
-            min = Math.min(min, arr[startX][i]);
-            min = Math.min(min, arr[endX][i]);
-        }
-
-        // 세로
-        for(int i = startX+1; i<endX; i++){
-            min = Math.min(min, arr[i][startY]);
-            min = Math.min(min, arr[i][endY]);
-        }
-
-        return min;
     }
 }
 ```
-
-<br>
-
-> ##### 참고 블로그
->
-> https://settembre.tistory.com/380
