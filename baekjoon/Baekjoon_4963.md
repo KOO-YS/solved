@@ -1,4 +1,4 @@
-# [BaekJoon#4963] 
+# [BaekJoon#4963] 섬의 개수
 
 
 
@@ -41,10 +41,12 @@ class Main {
         }
         System.out.print(result.toString());
     }
-    // 가로, 대각선, 세로, 역대각선
-    public static int[] dx = {0, 1, 1, 1};
-    public static int[] dy = {1, 1, 0, -1};
+    // 갈 수 있는 모든 방향을 탐색
+    // 순서 : 위, 좌측 위 대각선, 좌측, 좌측 아래 대각선, 아래, 우측 아래 대각선, 우측, 우측 위 대각선
+    public static int[] dx = {-1, -1, 0, 1, 1, 1, 0, -1};
+    public static int[] dy = {0, 1, 1, 1, 0, -1, -1, -1};
 
+    // 지도 상의 섬 개수 
     public static int getLandCount(int w, int h, int[][] map) {
         int count = 0;
         boolean[][] visited = new boolean[h][w];
@@ -60,17 +62,17 @@ class Main {
                     while(!queue.isEmpty()) {
                         int[] next = queue.poll();
                         int nextX, nextY;
-                        for (int k = 0; k < 3; k++) {
+                        for (int k = 0; k < dx.length; k++) {
                             nextX = next[0] + dx[k];
                             nextY = next[1] + dy[k];
 
-                            if(isBoundary(h, w, nextX, nextY)) {
+                            if(!isBoundary(h, w, nextX, nextY)) continue;
 
-                                if (!visited[nextX][nextY] && map[nextX][nextY] == 1) {
-                                    queue.add(new int[]{nextX, nextY});
-                                    visited[nextX][nextY] = true;
-                                }
+                            if (!visited[nextX][nextY] && map[nextX][nextY] == 1) {
+                                queue.add(new int[]{nextX, nextY});
+                                visited[nextX][nextY] = true;
                             }
+
                         }
                     }
 
