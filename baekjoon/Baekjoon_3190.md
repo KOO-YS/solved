@@ -7,8 +7,131 @@
 > https://www.acmicpc.net/problem/3190
 
 
+> ### Solution 1
 
-> ### Solution
+```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
+class Main {
+    public static int[][] map;
+    public static Deque<Point> snake;               // 뱀의 머리부터 꼬리까지 위치 저장
+    public static PriorityQueue<Turn> queue;        // 방향 변환을 시간순으로 나열
+
+    // 방향을 꺾을때마다 이동할 x, y 좌표
+    public static int[] dx = {0, 1, 0, -1};
+    public static int[] dy = {1, 0, -1, 0};
+
+    public static final int SNAKE_BODY = -1;
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer tokenizer;
+
+        int N = Integer.parseInt(br.readLine());
+        int K = Integer.parseInt(br.readLine());
+
+        map = new int[N+1][N+1];
+
+        snake = new LinkedList<>();
+        snake.add(new Point(1,1));
+        map[1][1] = SNAKE_BODY;
+
+        // 사과 채워넣기
+        while (K-- >0) {
+            tokenizer = new StringTokenizer(br.readLine());
+            map[Integer.parseInt(tokenizer.nextToken())][Integer.parseInt(tokenizer.nextToken())] = 1;
+        }
+
+        int L = Integer.parseInt(br.readLine());
+
+
+        queue = new PriorityQueue<>();
+        while (L-- >0) {
+            tokenizer = new StringTokenizer(br.readLine());
+            queue.add(new Turn(Integer.parseInt(tokenizer.nextToken()),
+                    (tokenizer.nextToken().charAt(0)=='D'? 1 : -1 )));      // 왼쪽 오른쪽 구분
+        }
+
+        System.out.println(checkTime());
+
+    }
+    public static int checkTime() {
+        int time = 1;       // 총 시간
+        int snakeDirect = 0;    // 뱀이 갈 다음 방향
+
+        // start : 다음 좌표
+        int x = 1 +dx[snakeDirect];
+        int y = 1 +dy[snakeDirect];
+
+
+        int nextRoute = map[x][y];          // 다음 칸 값
+        Turn nextTurn = queue.poll();       // 다음 방향 전환
+        Point rm;
+
+        // 벽에 닿으면 & 자기 몸과 부딪히면 OUT
+        while(isBoundary(x, y) && (nextRoute = map[x][y]) != SNAKE_BODY) {
+
+            // 먼저 뱀은 몸길이를 늘려 머리를 다음칸에 위치시킨다
+            snake.add(new Point(x, y));
+            map[x][y] = SNAKE_BODY;
+
+            // 만약 이동한 칸에 사과가 있다면, 그 칸에 있던 사과가 없어지고 꼬리는 움직이지 않는다
+            // 사과가 없다면, 몸길이를 줄여서 꼬리가 위치한 칸을 비워준다. 즉, 몸길이는 변하지 않는다.
+            if(nextRoute == 0) { // 사과 발견 X
+                rm = snake.removeFirst();
+                map[rm.x][rm.y] = 0;
+            }
+
+            // 방향 바꾸기
+            if(time == nextTurn.second) {
+
+                snakeDirect = ((snakeDirect + nextTurn.direct)<0 )? (snakeDirect + nextTurn.direct) + 4 : (snakeDirect + nextTurn.direct) % 4;
+                if(!queue.isEmpty()) nextTurn = queue.poll();
+            }
+            x += dx[snakeDirect];
+            y += dy[snakeDirect];
+            time++;
+        }
+
+        return time;
+    }
+
+    public static boolean isBoundary(int x, int y) {
+        if(x < 1 || x >= map.length) return false;
+        if(y < 1 || y >= map.length) return false;
+        return true;
+    }
+}
+class Turn implements Comparable<Turn>{
+    int second;
+    int direct;
+
+    public Turn(int second, int direct) {
+        this.second = second;
+        this.direct = direct;
+    }
+
+    @Override
+    public int compareTo(Turn o) {
+        return second - o.second;
+    }
+}
+
+class Point {
+    int x;
+    int y;
+
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+```
+<br>
+
+> ### Solution 2
 
 ```java
 
