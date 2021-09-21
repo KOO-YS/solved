@@ -10,36 +10,42 @@
 
 ```java
 class Solution {
-    public String solution(int[][] scores) {
+    public static int total;
+    public static int[][] scores;
+    public static boolean[] except;
+    public String solution(int[][] input) {
+
+        scores = input;
+        total = scores.length;
+        except = new boolean[total];
+
         StringBuilder answer = new StringBuilder();
 
-        for (int i=0; i<scores.length; i++) {
-            answer.append(setGrade(setScore(scores, i)));
+        for (int i=0; i<total; i++) {
+            answer.append(setGrade(setScore(i)));
         }
 
         return answer.toString();
     }
 
-    public int setScore(int[][] scores, int num) {
-        int own = scores[num][num];
-        int count = 0;
-        int max = Integer.MIN_VALUE;
-        int min = Integer.MAX_VALUE;
+    public int setScore(int num) {
+        int result = 0;
 
-        int sum = 0;
-
-        for (int i=0; i<scores.length; i++) {
-            int now = scores[num][i];
-
-            if(now == own) count++;
-            max = Math.max(max, now);
-            min = Math.min(min, now);
-
+        int[] grading = new int[total];
+        for (int i=0; i<total; i++) {
+            grading[i] = scores[i][num];
+            result += grading[i];
         }
-        if(max == own && count == 1) sum -= max;
-        else if(min == own && count == 1) sum -= min;
-        else sum 
-        
+
+        int own = scores[num][num];
+
+        Arrays.sort(grading);
+        if (grading[0] == own && grading[1] != own ||
+            grading[total - 1] == own && grading[total - 2] != own) {
+                result -= own;
+                return result/(total-1);
+        }
+        return result/total;
     }
 
     public char setGrade(int average) {
@@ -47,13 +53,17 @@ class Solution {
         int cut = 90;
         char grade = 'A';
 
-        while(cut > 50) {
+        while(cut > 60) {       // til C
             if (average >= cut) {
                 return grade;
             }
             cut -= 10;
             grade = (char) (grade+1);
         }
+        // D
+        cut -= 10;
+        if(average >= cut) return 'D';
+        // F
         return result;
     }
 }
