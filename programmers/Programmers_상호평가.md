@@ -9,10 +9,14 @@
 > ### solution
 
 ```java
+import java.util.*;
+
 class Solution {
+    
     public static int total;
     public static int[][] scores;
     public static boolean[] except;
+    
     public String solution(int[][] input) {
 
         scores = input;
