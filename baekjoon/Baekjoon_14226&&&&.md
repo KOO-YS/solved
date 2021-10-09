@@ -7,7 +7,7 @@
 > https://www.acmicpc.net/problem/14226
 
 
-> ### Solution (yet)
+> ### Solution (WRONG)
 
 ```java
 import java.io.BufferedReader;
@@ -19,39 +19,38 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer tokenizer = new StringTokenizer(br.readLine());
+        int S = Integer.parseInt(br.readLine());
 
-        int S = Integer.parseInt(tokenizer.nextToken());
+        // 방문 여부
+        visited = new boolean[MAX][MAX];    // emoji, clipboard
 
-        int MIN = Integer.MAX_VALUE;
-
-
-        
-        Stack<Screen> stack = new Stack<>();
+        Queue<Screen> queue = new LinkedList<>();
+        // 초기값 : emoji
         Screen s = new Screen();
+        queue.add(s);
+        visited[1][0] = true;
 
-        stack.add(s);
+        while(!queue.isEmpty()) {
 
-        while(!stack.isEmpty()) {
-
-            Screen now = stack.pop();
-            // S개의 이모티콘을 완성할 때까지 계속한다
-//            while (now.emoji == S) {
-//            }
+            Screen now = queue.poll();
             for (Operation o : Operation.values()) {
-                Screen next = o.test(now);
+                if(!o.inCondition(now)) break;
+                Screen next = o.calculate(now);
                 // 이모지가 음수가 나올 수 없다
                 // 현재 기준 최소보다 높다면 알아볼 필요 ㄴ
-                if (next.emoji == 0 || next.time > MIN) break;
+//                if (next.emoji == 0 || next.time >= MAX) break;
 
                 if(next.emoji == S) {
-                    MIN = next.time;
-                } else stack.add(next);
+                    System.out.println(next.time);
+                    return;
+                } else queue.add(next);
             }
         }
-        System.out.println(MIN);
 
     }
+    public static int MAX = 1001;
+    public static boolean[][] visited;
+
     static class Screen {
         int emoji;  // 화면에 입력된 이모티콘
         int clipboard;  // 클립보드에 저장된 이모티콘 개수
@@ -69,17 +68,22 @@ public class Main {
             this.time = time;
         }
 
+        @Override
+        public String toString() {
+            return "Screen{" +
+                    "emoji=" + emoji +
+                    ", clipboard=" + clipboard +
+                    ", time=" + time +
+                    '}';
+        }
     }
     enum Operation {
         COPY {
-            @Override
-            public int apply(int input) {
-                return 0;
-            }
 
             @Override
-            public Screen test(Screen input) {
+            public Screen calculate(Screen input) {
                 Screen result = new Screen();
+                visited[input.emoji][input.emoji] = true;
 
                 result.emoji = input.emoji;
                 result.clipboard = input.emoji;
@@ -87,43 +91,55 @@ public class Main {
 
                 return result;
             }
+
+            @Override
+            public boolean inCondition(Screen input) {
+                return (input.emoji > 0 && input.time < MAX)
+                        && !visited[input.emoji][input.emoji];
+            }
         },
         PASTE {
             @Override
-            public int apply(int input) {
-                return 0;
-            }
-            @Override
-            public Screen test(Screen input) {
+            public Screen calculate(Screen input) {
                 Screen result = new Screen();
-
+                visited[input.emoji+input.clipboard][input.clipboard] = true;
                 result.emoji = input.emoji + input.clipboard;
                 result.clipboard = input.clipboard;
                 result.time = input.time+1;
 
                 return result;
             }
+
+            @Override
+            public boolean inCondition(Screen input) {
+                return (input.clipboard > 0 && (input.time +input.clipboard) < MAX)
+                        && !visited[input.emoji+input.clipboard][input.clipboard];
+            }
         },
         DELETE {
             @Override
-            public int apply(int input) {
-                return 0;
-            }
-            @Override
-            public Screen test(Screen input) {
+            public Screen calculate(Screen input) {
                 Screen result = new Screen();
 
+                visited[input.emoji-1][input.emoji] = true;
                 result.emoji = input.emoji - 1;
                 result.clipboard = input.emoji;
                 result.time = input.time+1;
 
                 return result;
             }
+
+            @Override
+            public boolean inCondition(Screen input) {
+                return (input.emoji > 0 && input.time < MAX)
+                        && !visited[input.emoji-1][input.emoji];
+            }
         };
 
-        public abstract int apply(int input);
-        public abstract Screen test(Screen input);
+        public abstract Screen calculate(Screen input);
+        public abstract boolean inCondition(Screen input);
 
     }
+
 }
 ```
