@@ -8,7 +8,7 @@
 
 
 
-> ### Solution
+> ### Solution WRONG
 >
 
 ```java
@@ -18,6 +18,7 @@ import java.util.*;
 
 public class Main {
 
+    public static char[][] chess;
     public static int MIN;
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,34 +29,35 @@ public class Main {
 
         MIN = Integer.MAX_VALUE;
         // 0, 0 이 black or white
-        char[][] chess = new char[N][M];
+        chess = new char[N][M];
         for (int i=0; i<N; i++) {
             char[] line = br.readLine().toCharArray();
             System.arraycopy(line, 0, chess[i], 0, N);
         }
 
-        for (int i=0; i<N-8; i++) {
-            for (int j=0; j<M-8; j++) {
-                MIN = Math.min(MIN, make8square(i, j, chess[i][j]));
+        for (int i=0; i<N-7; i++) {
+            for (int j=0; j<M-7; j++) {
+                MIN = Math.min(MIN, make8square(i, j, chess[i][j], 'B'));
+                MIN = Math.min(MIN, make8square(i, j, chess[i][j], 'W'));
             }
         }
         System.out.println(MIN);
     }
 
-    public static int make8square(int startH, int startW, char startChar) {
+    public static int make8square(int startH, int startW, char startChar, char standard) {
+        if(startW==14 && startH==1) System.out.println("TOUCH");
         int count = 0;
-
+        boolean sameWithStart = (startChar == standard);
         for (int i=startH; i<startH+8; i++) {
+            if(i == startH+7) System.out.println("t");
             for (int j=startW; j<startW+8; j++) {
-
-
-
+                if (sameWithStart != (chess[i][j] == standard))
+                    count++;
+                sameWithStart = !sameWithStart;
             }
+            sameWithStart = !sameWithStart;
         }
         return count;
     }
-
-
 }
-
 ```
