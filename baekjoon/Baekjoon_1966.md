@@ -1,0 +1,84 @@
+# [BaekJoon#1966] 프린터 큐
+
+
+
+> ### Problem
+>
+> https://www.acmicpc.net/problem/1966
+
+
+
+> ### Solution 
+
+```java
+priority 정렬 중 printer 들어간 순서에 맞게 카운터 할 방법 확인하기
+```
+
+<br>
+
+
+
+> ### Wrong
+
+```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer tokenizer;
+        StringBuilder result = new StringBuilder();
+
+        int T = Integer.parseInt(br.readLine());
+
+        while (T-- > 0) {
+            tokenizer = new StringTokenizer(br.readLine());
+
+            int N = Integer.parseInt(tokenizer.nextToken());
+            int M = Integer.parseInt(tokenizer.nextToken());
+
+            Queue<Document> printer = new LinkedList<>();
+            Queue<Document> priority = new PriorityQueue<>();
+
+            tokenizer = new StringTokenizer(br.readLine());
+            for (int i=0; i<N; i++) {
+                Document doc = new Document(i, Integer.parseInt(tokenizer.nextToken()));
+                printer.add(doc);
+                priority.add(doc);
+            }
+            int count = 0;
+            while (!printer.isEmpty()) {
+                if (priority.peek().index == printer.peek().index) {
+                    count++;
+                    priority.poll();
+                    if(M == printer.poll().index) {
+                        result.append(count).append('\n');
+                        break;
+                    }
+                } else printer.add(printer.poll());
+            }
+        }
+        System.out.print(result.toString());
+    }
+    static class Document implements Comparable<Document>{
+        int index;
+        int priority;
+
+        public Document(int index, int priority) {
+            this.index = index;
+            this.priority = priority;
+        }
+
+        @Override
+        public int compareTo(Document o) {
+            return o.priority - this.priority;
+        }
+    }
+}
+```
+
+
+
