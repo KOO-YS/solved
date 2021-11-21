@@ -1,4 +1,4 @@
-# [BaekJoon#10816] 덩치
+# [BaekJoon#7568] 덩치
 
 
 
