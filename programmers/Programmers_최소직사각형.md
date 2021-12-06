@@ -1,8 +1,8 @@
-# [Programmers] 최소 직사각형
+# [Programmers] 나머지가 1이 되는 수 찾기
 
 > ### Problem
 >
-> https://programmers.co.kr/learn/courses/30/lessons/86491
+> https://programmers.co.kr/learn/courses/30/lessons/87389
 
 <br>
 
@@ -10,13 +10,14 @@
 
 ```java
 class Solution {
-    public int solution(int[][] sizes) {
-        int width = 0, height = 0;
-        for (int[] arr : sizes) {
-            width = Math.max(width, Math.max(arr[0], arr[1]));
-            height = Math.max(height, Math.min(arr[0], arr[1]));
+    public int solution(int n) {
+        int answer = 1;
+
+        while (n > answer) {
+            if (n%answer == 1) return answer;
+            answer ++;
         }
-        return width * height;
+        return answer;
     }
 }
 ```
