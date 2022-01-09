@@ -48,3 +48,55 @@ public int[] solution(String[][] places) {
     }
 ```
 
+<br>
+
+> ### wrong
+>
+> ```
+> 채점 결과
+> 정확성: 50.7
+> 합계: 50.7 / 100.0	
+
+```java
+class Solution {
+    public int[] solution(String[][] places) {
+        int[] answer = new int[5];
+        int index = 0;
+
+        char[][] room;
+        int rmIndex;
+        for (String[] row : places) {
+            room = new char[5][5];
+            rmIndex = 0;
+            for (String column : row) {
+                room[rmIndex++] = column.toCharArray();
+            }
+            answer[index++] = keepDistance(room);
+        }
+
+        return answer;
+    }
+
+    public int keepDistance(char[][] room) {
+        for (int i=0; i<room.length-2; i++) {
+            for (int j=0; j<room[i].length-2; j++) {
+                if(room[i][j] == 'P') {     // 응시자 발견
+                    if(room[i][j+1] == 'P' || room[i+1][j] == 'P') return 0;
+                    if(room[i][j+1] == 'O' && (room[i][j+2] == 'P' || room[i+1][j+1] == 'P')) return 0;
+                    if(room[i+1][j] == 'O' && (room[i+1][j+1] == 'P' || room[i+2][j] == 'P')) return 0;
+                }
+            }
+        }
+        int i = 3;
+        int j = 3;
+        if(room[i][j] == 'P') {     // 응시자 발견
+            if(room[i][j+1] == 'P' || room[i+1][j] == 'P') return 0;
+            if(room[i][j+1] == 'O' && room[i+1][j+1] == 'P') return 0;
+            if(room[i+1][j] == 'O' && room[i+1][j+1] == 'P') return 0;
+        }
+
+        return 1;
+    }
+}
+```
+
