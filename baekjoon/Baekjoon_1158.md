@@ -36,14 +36,10 @@ public class Main {
 
         int index = 0;
         while (N > 1) {
-            index += K;
-//            if (index / people.size() < 1)
-            index = (index % people.size()-1);
-//            else
-//                index = index % people.size();
+            index = (index + K) % people.size();
+            index = (index == 0)? people.size()-1 : index - 1;
 
             removeOrder.add(people.remove(index));
-
             N--;
         }
         result.append('<');
@@ -51,7 +47,7 @@ public class Main {
         result.append(people.get(0));
         result.append('>');
 
-        System.out.print(result.toString());
+        System.out.print(result);
 
     }
 }
