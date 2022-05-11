@@ -14,10 +14,9 @@
 ```java
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.StringTokenizer;
 
 public class Main {
-
     public static char[][] chess;
     public static int MIN;
     public static void main(String[] args) throws Exception {
@@ -45,11 +44,9 @@ public class Main {
     }
 
     public static int make8square(int startH, int startW, char startChar, char standard) {
-        if(startW==14 && startH==1) System.out.println("TOUCH");
         int count = 0;
         boolean sameWithStart = (startChar == standard);
         for (int i=startH; i<startH+8; i++) {
-            if(i == startH+7) System.out.println("t");
             for (int j=startW; j<startW+8; j++) {
                 if (sameWithStart != (chess[i][j] == standard))
                     count++;
