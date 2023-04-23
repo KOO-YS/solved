@@ -11,9 +11,26 @@
 > ### Solution
 
 ```java
-public int[] solution(int k, int[] score) {
-    int[] answer = {};
-    return answer;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+class Solution {
+    public int[] solution(int k, int[] score) {
+        int[] answer = new int[score.length];
+
+        Queue<Integer> rank = new PriorityQueue<>();
+
+        for (int i = 0; i<score.length; i++) {
+            if (rank.size() < k)
+                rank.add(score[i]);
+            else {
+                rank.add(Math.max(rank.poll(), score[i]));
+            }
+            answer[i] = rank.peek();
+        }
+
+        return answer;
+    }
 }
 ```
 
