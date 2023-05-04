@@ -21,11 +21,11 @@ class Solution {
 		}
 
 		for (int i=0; i<s.length(); i++) {
-			int alphabetInt = s.charAt(i) - 'a';
 			int count = 0;
+			int alphabetInt = s.charAt(i) - 'a';
 
 			while (count < index) {
-				alphabetInt = (++alphabetInt)%26;
+				alphabetInt = (++ alphabetInt)%26;
 				if (exception[alphabetInt] == 0) {
 					count++;
 				}
