@@ -11,21 +11,29 @@
 > ### Solution
 
 ```java
-public String solution(String s, String skip, int index) {
-    String answer = "";
+class Solution {
+    public String solution(String s, String skip, int index) {
+		StringBuilder answer = new StringBuilder();
 
-    int[] exception = new int[skip.length()];
-    for (int i=0; i<skip.length(); i++) {
-        exception[i] = skip.charAt(i) - 'a';
-    }
+		int[] exception = new int[26];
+		for (int i=0; i<skip.length(); i++) {
+			exception[skip.charAt(i) - 'a']++;
+		}
 
-    for (int i=0; i<s.length(); i++) {
-        int alphabetInt = s.charAt(i) - 'a';
+		for (int i=0; i<s.length(); i++) {
+			int alphabetInt = s.charAt(i) - 'a';
+			int count = 0;
 
-    }
-
-
-    return answer;
+			while (count < index) {
+				alphabetInt = (++alphabetInt)%26;
+				if (exception[alphabetInt] == 0) {
+					count++;
+				}
+			}
+			answer.append((char) (alphabetInt + 'a'));
+		}
+		return answer.toString();
+	}
 }
 ```
 
