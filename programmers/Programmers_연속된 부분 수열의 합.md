@@ -12,7 +12,39 @@
 > ### Solution
 
 ```java
+class Solution {
+    public int[] solution(int[] sequence, int k) {
+		int[] answer = new int[2];
 
+		int sum = 0;
+
+		int front = 0;	// 부분 수열의 첫 인덱스
+		int end = 0;	// 부분 수열의 마지막 인덱스 + 1
+
+		int length = sequence.length;
+
+		while (end < sequence.length) {
+			sum += sequence[end];
+			end++;
+
+			if (sum > k) {
+				while (sum > k) {
+					sum -= sequence[front];
+					front++;
+				}
+			}
+
+			if (sum ==  k) {
+				if (length > end-front-1) {
+					length = end-front-1;
+					answer[0] = front;
+					answer[1] = end-1;
+				}
+			}
+		}
+		return answer;
+	}
+}
 ```
 
 ---
