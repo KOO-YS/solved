@@ -9,7 +9,19 @@
 > ### Solution
 
 ```java
-public int solution(String[][] book_time) {
+```
+
+---
+
+<br>
+
+> ### Wrong 
+
+```java
+import java.util.*;
+
+class Solution {
+    public int solution(String[][] book_time) {
 		int answer = 0;
 
 		List<Booking> bookingList = new ArrayList<>();
@@ -20,16 +32,24 @@ public int solution(String[][] book_time) {
 
 		List<Integer> roomList = new ArrayList<>();
 		for (Booking booking : bookingList) {
-			
+			boolean hasRoom = false;
+
+			Collections.sort(roomList);
+			for (int i=0; i<roomList.size(); i++) {
+				int lastTime = roomList.get(i);
+				if (lastTime <= booking.startTime){
+					roomList.set(i, booking.endTime+10);
+					hasRoom = true;
+					break;
+				}
+			}
+			if (!hasRoom)
+				roomList.add(booking.endTime+10);
 		}
-
-
-
-
-		return answer;
+		return roomList.size();
 	}
-
-	class Booking {
+    
+    class Booking {
 		int startTime;
 		int endTime;
 
@@ -38,4 +58,5 @@ public int solution(String[][] book_time) {
 			this.endTime = Integer.parseInt(end.replace(":", ""));
 		}
 	}
+}
 ```
