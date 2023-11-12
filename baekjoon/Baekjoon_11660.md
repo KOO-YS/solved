@@ -112,3 +112,57 @@ public class Main {
 
 
 <img src="../img/bj11660.jpg" style="width:50%; float:left;">
+
+---
+
+
+```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+// https://www.acmicpc.net/problem/11659
+// https://www.acmicpc.net/problem/11660
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine());
+
+        int N = Integer.parseInt(token.nextToken());
+        int M = Integer.parseInt(token.nextToken());
+
+        int[][] arr = new int[N+1][N+1];
+
+        for (int i=1; i<=N; i++) {
+            token = new StringTokenizer(br.readLine(), " ");
+            for (int j=1; j<=N; j++) {
+                arr[i][j] = Integer.parseInt(token.nextToken());
+            }
+        }
+
+        for (int i=1; i<=N; i++) {
+            for (int j=1; j<=N; j++) {
+                arr[i][j] += (arr[i-1][j] + arr[i][j-1] - arr[i-1][j-1]);
+            }
+        }
+
+        int[] xy;
+        for (int i=0; i<M; i++) {
+            token = new StringTokenizer(br.readLine(), " ");
+            xy = new int[4];
+            for (int j=0; j<4; j++) {
+                xy[j] = Integer.parseInt(token.nextToken());
+            }
+            System.out.println(prefixSum(arr, xy[0], xy[1], xy[2], xy[3]));
+        }
+    }
+
+    public static int prefixSum(int[][] arr, int startX, int startY, int endX, int endY) {
+        return arr[endX][endY] - arr[startX-1][endY] - arr[endX][startY-1] + arr[startX-1][startY-1];
+    }
+
+}
+
+```
