@@ -83,3 +83,65 @@ class Location{
     }
 }
 ```
+
+
+```java
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer token = new StringTokenizer(br.readLine());
+
+        int N = Integer.parseInt(token.nextToken());
+        int M = Integer.parseInt(token.nextToken());
+
+        int[][] map = new int[N][M];
+        boolean[][] visit = new boolean[N][M];
+        int[][] shortest = new int[N][M];
+
+        for (int i=0; i<N; i++) {
+            map[i] = br.readLine().chars().map(c -> c  - 48).toArray();
+            Arrays.fill(shortest[i], Integer.MAX_VALUE);
+        }
+
+        shortest[0][0] = 1;
+        bfs(0, 0, map, visit, shortest);
+
+        System.out.println(shortest[N-1][M-1]);
+    }
+
+    static int[] dx = {-1, 0, 1, 0};
+    static int[] dy = {0, 1, 0, -1};
+
+    private static void bfs(int x, int y, int[][] map, boolean[][] visit, int[][] shortest) {
+
+        Queue<int[]> queue = new LinkedList<>();
+        queue.add(new int[]{x, y});
+
+        while (!queue.isEmpty()) {
+            int[] now = queue.poll();
+            int min = shortest[now[0]][now[1]];
+
+            for (int i=0; i<4; i++) {
+                int nextX = now[0] + dx[i];
+                int nextY = now[1] + dy[i];
+
+                if (nextX < 0 || nextX >= map.length || nextY < 0 || nextY >= map[0].length) continue;
+                if (map[nextX][nextY] == 1 && shortest[nextX][nextY] > min + 1 ) {
+                    shortest[nextX][nextY] = min + 1;
+                    queue.add(new int[]{nextX, nextY});
+                }
+            }
+        }
+    }
+}
+
+
+```
