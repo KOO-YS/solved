@@ -80,3 +80,88 @@ class Main {
     }
 }
 ```
+
+```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+
+public class Main {
+    static boolean[] visit;
+    static int[] distance;
+    static List<Node>[] nodes;
+    public static void main(String[] args) throws IOException {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer tokenizer;
+
+        int V = Integer.parseInt(br.readLine());
+        nodes = new ArrayList[V+1];
+        distance = new int[V+1];
+        visit = new boolean[V+1];
+        int max = 1;
+
+        for (int i=1; i<=V; i++) {
+            nodes[i] = new ArrayList<>();
+        }
+
+        for (int i=0; i<V; i++) {
+            tokenizer = new StringTokenizer(br.readLine());
+
+            int num = Integer.parseInt(tokenizer.nextToken());
+            int next;
+            while ((next = Integer.parseInt(tokenizer.nextToken())) != -1) {
+                nodes[num].add(new Node(next, Integer.parseInt(tokenizer.nextToken())));
+            }
+        }
+
+        bfs(1);
+        for (int i = 2; i<=V; i++) {
+            if (distance[max] < distance[i])
+                max = i;
+        }
+
+        distance = new int[V+1];
+        visit = new boolean[V+1];
+        bfs(max);
+
+        Arrays.sort(distance);
+        System.out.println(distance[V]);
+
+
+    }
+
+    static void bfs(int start) {
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(start);
+        visit[start] = true;
+
+        while (!queue.isEmpty()) {
+            int now = queue.poll();
+
+            for (Node n : nodes[now]) {
+                int num = n.num;
+                int value = n.value;
+                if (!visit[num]) {
+                    visit[num] = true;
+                    queue.add(num);
+                    distance[num] = distance[now] + value;
+                }
+            }
+
+        }
+    }
+
+    static class Node {
+        int num;
+        int value;
+
+        Node(int num, int value) {
+            this.num = num;
+            this.value = value;
+        }
+    }
+}
+
+```
