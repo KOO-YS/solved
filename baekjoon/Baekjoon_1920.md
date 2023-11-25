@@ -42,41 +42,56 @@ public class Main {
 }
 ```
 
+```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
+public class Main {
+    static int[] arr;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer tokenizer;
 
-> ####  반례
->
-> ```
-> 5
-> -1 
-> 0 
-> 1 
-> 2 
-> 3
-> 답 : 7
-> ```
->
-> ```
-> 4
-> -1 
-> -1 
-> -1 
-> 3
-> 답 : 3
-> ```
->
-> ```
-> 3
-> -6 
-> -5 
-> -1
-> 답 : 29
-> ```
->
-> ```
-> 2
-> 1
-> 2
-> 답 : 3
-> ```
+        int N = Integer.parseInt(br.readLine());
 
+        arr = new int[N];
+        tokenizer = new StringTokenizer(br.readLine(), " ");
+
+        for (int i=0; i<N; i++) {
+            arr[i] = Integer.parseInt(tokenizer.nextToken());
+        }
+
+        Arrays.sort(arr);
+
+        int M = Integer.parseInt(br.readLine());
+        tokenizer = new StringTokenizer(br.readLine(), " ");
+
+        while (M-- > 0) {
+            System.out.println(
+                (exist(Integer.parseInt(tokenizer.nextToken())))? 1 : 0);
+        }
+    }
+
+    static boolean exist(int value) {
+        int start = 0;
+        int end = arr.length - 1;
+
+        while (start <= end) {
+            int mid = (start + end) / 2;
+
+            if (arr[mid] == value)
+                return true;
+            if (arr[mid] > value) {
+                end = mid - 1;
+            } else
+                start = mid + 1;
+        }
+
+        return false;
+    }
+
+}
+
+```
