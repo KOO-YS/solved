@@ -9,12 +9,6 @@
 
 
 > ### Solution
->
-
----
-
-> ### Wrong
->
 
 > ```java
 import java.io.BufferedReader;
