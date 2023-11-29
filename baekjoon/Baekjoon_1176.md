@@ -1,62 +1,75 @@
-# [BaekJoon#1176] 트리의 지름
+# [BaekJoon#1776] 암기왕
 
 
 
 > ### Problem
 >
-> https://www.acmicpc.net/problem/1176
+> https://www.acmicpc.net/problem/1776
 
 
 
 > ### Solution
 >
+
+---
+
+> ### Wrong
+>
+
 > ```java
-> import java.io.*;
-> import java.util.*;
-> 
-> //https://www.acmicpc.net/problem/1167
->    class Main {
->        public static void main(String[] args) throws Exception {
->            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
->            StringTokenizer token;
->         StringBuilder result = new StringBuilder();
->    
->            int V = Integer.parseInt(br.readLine());
-> 
->            int[] distance = new int[V+1];
->            List<int[]>[] linked = new ArrayList[V+1];
->            for(int i=1; i<=V; i++){
->                token = new StringTokenizer(br.readLine());
->                int num = Integer.parseInt(token.nextToken());
->                linked[num] = new ArrayList<>();
-> 
->                int linkedNum;
->                while((linkedNum = Integer.parseInt(token.nextToken())) != -1){
->                    // 연결된 정점번호와 그 거리
->                    linked[num].add(new int[]{linkedNum, Integer.parseInt(token.nextToken())});
->                }
->            }
->    
->            Queue<Integer> queue = new LinkedList<>();
->         boolean[] visited = new boolean[V+1];
->            queue.add(1);
->         visited[1] = true;
->            while(!queue.isEmpty()){
->                int now = queue.poll();
->                for(int i=0; i<linked[i].size(); i++){
->    
->                }
->            }
->    
->        }
->    }
->    
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer tokenizer;
+        StringBuilder result = new StringBuilder();
+
+        int T = Integer.parseInt(br.readLine());
+
+        while (T-- > 0) {
+            int N = Integer.parseInt(br.readLine());
+
+            int[] note = new int[N];
+            tokenizer = new StringTokenizer(br.readLine(), " ");
+            for (int i = 0; i < N; i++) {
+                note[i] = Integer.parseInt(tokenizer.nextToken());
+            }
+
+            Arrays.sort(note);
+
+            int M = Integer.parseInt(br.readLine());
+            tokenizer = new StringTokenizer(br.readLine(), " ");
+            for (int i = 0; i < M; i++) {
+                result.append(contains(note, Integer.parseInt(tokenizer.nextToken()))).append('\n');
+            }
+
+            System.out.println(result);
+        }
+
+    }
+
+    static int contains(int[] note, int num) {
+        int start = 0;
+        int end = note.length - 1;
+
+        while (start <= end) {
+            int mid = (start + end)/2;
+            if (note[mid] == num)
+                return 1;
+            else if (note[mid] > num)
+                end = mid -1;
+            else
+                start = mid +1;
+
+        }
+        return 0;
+    }
+
+}
+
 >    ```
-
-
-
->#### 풀이
->
->임의의 점에서 시작했을 때 가장 먼거리의 점이 존재 -> 지름의 한쪽 끝점
->
->끝점에서 가장 먼 점을 찾아 거리 확인 -> 지름
