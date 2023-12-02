@@ -25,32 +25,32 @@ public class Main {
         int K = Integer.parseInt(tokenizer.nextToken());
 
 
-        int[] lines = new int[N];
-        int max = 0;
+        long[] lines = new long[N];
+        long max = 0;
         for (int i=0; i<N; i++) {
             lines[i] = Integer.parseInt(br.readLine());
             max = Math.max(max, lines[i]);
         }
 
-        int start = 0;
-        int end = max + 1;
-        int count;
-        while (start < end) {
-            int mid = (start + end)/2;
+        long start = 1;
+        long end = max + 1;
+        long count;
+        long mid = 0;
+
+        while (start <= end) {
+            mid = (start + end)/2;
             count = 0;
             for (int i=0; i<N; i++) {
                 count += (lines[i]/mid);
             }
             if (count < K) {
-                end = mid;
+                end = mid - 1;
             } else
                 start = mid + 1;
         }
 
         System.out.println(start-1);
-
     }
-    
 }
 ```
 
