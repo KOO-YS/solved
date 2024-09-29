@@ -23,29 +23,30 @@ public class Main {
         StringTokenizer tokenizer;
         StringBuilder result = new StringBuilder();
 
-        int stop = 1;
-        while (stop != 0) {
+        while (true) {
             tokenizer = new StringTokenizer(br.readLine(), " ");
 
             int[] triangles = new int[3];
             for (int i = 0; i < 3; i++) {
                 triangles[i] = Integer.parseInt(tokenizer.nextToken());
             }
+            if (triangles[0] == 0)
+                break;
 
             Arrays.sort(triangles);
             if (triangles[0] + triangles[1] <= triangles[2])
-                System.out.println("Invalid");
+                result.append("Invalid");
             else {
-                int side = triangles[0];
-
-
-
+                if (triangles[0] == triangles[1] && triangles[1] == triangles[2])
+                    result.append("Equilateral");
+                else if (triangles[0] == triangles[1] || triangles[1] == triangles[2])
+                    result.append("Isosceles");
+                else
+                    result.append("Scalene");
             }
+            result.append('\n');
         }
-
-
-
-
+        System.out.print(result);
     }
 }
 ```
