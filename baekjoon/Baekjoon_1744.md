@@ -53,7 +53,51 @@ public class Main {
 }
 ```
 
+```java
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
+public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int N = Integer.parseInt(br.readLine());
+
+        Queue<Integer> positives = new PriorityQueue<>(Collections.reverseOrder());
+        Queue<Integer> negatives = new PriorityQueue<>();
+
+        int answer = 0;
+        for (int i=0; i<N; i++) {
+            int n = Integer.parseInt(br.readLine());
+
+            if (n > 1)
+                positives.add(n);
+            else if (n == 1) {
+                answer ++;
+            } else
+                negatives.add(n);
+        }
+
+        while (positives.size() > 1) {
+            answer += positives.remove() * positives.remove();
+        }
+        if (positives.size() == 1)
+            answer += positives.remove();
+
+        while (negatives.size() > 1) {
+            answer += negatives.remove() * negatives.remove();
+        }
+        if (negatives.size() == 1)
+            answer += negatives.remove();
+
+        System.out.println(answer);
+    }
+}
+```
 
 > ####  반례
 >
@@ -89,5 +133,17 @@ public class Main {
 > 1
 > 2
 > 답 : 3
+> ```
+>
+> ```
+> 7
+> -3
+> -2
+> -1
+> -1
+> 0
+> 1
+> 2
+> 답 : 10
 > ```
 
