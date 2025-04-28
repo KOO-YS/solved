@@ -8,8 +8,7 @@
 
 > ### solution
 
-```java
-import java.util.*;
+```javaimport java.util.*;
 
 class Solution {
     public int solution(int[] bandage, int health, int[][] attacks) {
@@ -18,7 +17,7 @@ class Solution {
         int hp = health;
         int attackIndex = 0;
         int nonStop = 1;
-        for (int i=0; i<attacks[attacks.length - 1][0]; i++) {
+        for (int i=0; i<=attacks[attacks.length - 1][0]; i++) {
             if (hp <= 0 || attackIndex >= attacks.length)
                 return -1;
             else if (i == attacks[attackIndex][0]) {
@@ -32,14 +31,12 @@ class Solution {
                     hp = Math.min(health, hp+=bandage[2]);
                     nonStop = 1;
                 } else 
-                    hp = Math.min(health, hp+=bandage[1]);
-                
+                    nonStop ++;
+                hp = Math.min(health, hp+=bandage[1]);
             }
             
         }
-        
-        
-        return answer;
+        return (hp==0)? -1: hp;
     }
 }
 ```
