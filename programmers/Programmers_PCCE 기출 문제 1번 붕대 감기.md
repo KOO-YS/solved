@@ -8,7 +8,8 @@
 
 > ### solution
 
-```javaimport java.util.*;
+```java
+import java.util.*;
 
 class Solution {
     public int solution(int[] bandage, int health, int[][] attacks) {
