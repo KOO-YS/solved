@@ -11,6 +11,79 @@
 > ### Solution
 
 ```java
+import java.util.*;
+
+class Solution {
+    public String[] solution(String[][] plans) {
+        String[] answer = new String[plans.length];
+        int answerIndex = 0;
+        Stack<Task> keep = new Stack<>();
+
+        Task[] tasks = Arrays.stream(plans)
+                .map(plan -> new Task(plan[0], plan[1], plan[2]))
+                .sorted()
+                .toArray(Task[]::new);
+
+        Task now, next = null;
+        int term = 0;
+
+        for (int i = 0; i < plans.length-1; i++) {
+            now = tasks[i];
+            next = tasks[i+1];
+
+            if ((now.startTime + now.taken) <= next.startTime) {
+                answer[answerIndex++] = now.name;
+                term = next.startTime - (now.startTime + now.taken);
+            } else {
+                now.taken = (now.startTime + now.taken) - next.startTime;
+                term = 0;
+                keep.push(now);
+            }
+
+            while (term > 0 && !keep.isEmpty()) {
+                now = keep.pop();
+
+                if (now.taken <= term) {
+                    answer[answerIndex++] = now.name;
+                    term = term - now.taken;
+                } else {
+                    now.taken -= term;
+                    term = 0;
+                    keep.push(now);
+                }
+            }
+        }
+        keep.push(next);
+        while (!keep.isEmpty()) {
+            answer[answerIndex++] = keep.pop().name;
+        }
+
+        return answer;
+    }
+}
+
+
+class Task implements Comparable<Task> {
+    String name;
+    int startTime;
+    int taken;
+
+    public Task(String name, String startTime, String taken) {
+        this.name = name;
+        this.startTime = convertTime(startTime);
+        this.taken = Integer.parseInt(taken);
+    }
+
+    public int convertTime(String timeStr) {
+        String[] split = timeStr.split(":");
+        return Integer.parseInt(split[0]) * 60 + Integer.parseInt(split[1]);
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        return this.startTime - o.startTime;
+    }
+}
 ```
 
 ---
